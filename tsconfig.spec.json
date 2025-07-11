@@ -2,13 +2,18 @@
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "extends": "./tsconfig.json",
+//tsconfigteki ayarları bir daha yazmamak için ekleriz 
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine"
     ]
+  //derlenen testlerin sonuçları spec klasöründe
+  //jasmine tipi test
   },
   "include": [
     "src/**/*.ts"
   ]
+  //src nin içindeki tüm ts dosyaları teste katılacak
 }
+//Test sırasında yapılacak ayarlamalar için

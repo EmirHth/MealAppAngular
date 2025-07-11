@@ -1,34 +1,36 @@
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+//ana yapılandırma dosyası
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "strict": true,
-    "noImplicitOverride": true,
+    "strict": true,//katı syntax kuralları aktif(null kontrolü)
+    "noImplicitOverride": true,//override edilen methodlar için override anahtarının kullanılması zorunlu
     "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
+    //[key:string]:any gibi yapıların obj.key yerine obj['key'] ile erişilmesi zorunlu
+    "noImplicitReturns": true,//tüm kod yolları bir return içermeli
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
+    "skipLibCheck": true,//node_modules içindeki .d ve .ts dosyalarının tip kontrolünü atla,hızlı derlenir
+    "isolatedModules": true,//her dosya kendi başına derlenebilir olmalı,derleme hızını arttır
+    "experimentalDecorators": true,//@Component gibi dekoratörleri aktif eder
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve"//modül sistemi korunur,anguların derleyici pipeline i için gerekli
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "typeCheckHostBindings": true,
-    "strictTemplates": true
+    "strictInjectionParameters": true,//parametrelerin tipi belirtilmezse hata verir
+    "strictInputAccessModifiers": true,//input değişkenlerinin erişim düzeyi uyumsuzsa hata verir
+    "typeCheckHostBindings": true,//template deki [(ngModel)] gibi bağlamalar da tip kontrolüne girer
+    "strictTemplates": true//templatelerde tam katı tip denetimi
   },
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.app.json"//projenin uygulama referansı
     },
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./tsconfig.spec.json"//projenin test referansı
     }
   ]
 }

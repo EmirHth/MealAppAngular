@@ -1,0 +1,179 @@
+<div class="meal-detail-bg min-h-screen flex flex-col items-center py-10 px-2">
+  <div class="meal-detail-container w-full max-w-3xl bg-white rounded-2xl shadow-lg p-6 flex flex-col gap-8">
+    <button (click)="goBack()" class="meal-detail-back mb-4">← Geri Dön</button>
+    <ng-container *ngIf="loading">
+      <div class="meal-detail-loading flex flex-col gap-4 items-center">
+        <div class="meal-detail-img skeleton"></div>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-meta"></div>
+        <div class="skeleton skeleton-meta"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line"></div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="error && !loading">
+      <div class="meal-detail-error flex flex-col items-center gap-2">
+        <span class="meal-detail-error-icon">⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!loading && !error && meal">
+      <!-- Başlık ve Favori Butonu -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+        <h1 class="meal-detail-title text-2xl font-bold text-gray-800">{{ meal.strMeal }}</h1>
+        <button (click)="toggleFavorite(meal.idMeal)" class="meal-detail-fav-btn" [attr.aria-label]="isFavorite(meal.idMeal) ? 'Favoriden çıkar' : 'Favorilere ekle'">
+          <span *ngIf="isFavorite(meal.idMeal)" class="meal-detail-fav-icon active text-2xl">❤️</span>
+          <span *ngIf="!isFavorite(meal.idMeal)" class="meal-detail-fav-icon text-2xl">🩷</span>
+        </button>
+      </div>
+      <!-- Görsel ve Etiketler -->
+      <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-detail-img w-full max-w-md mx-auto rounded-xl shadow mb-4" />
+      <div class="meal-detail-tags flex flex-wrap gap-2 mb-4">
+        <span class="meal-detail-tag accent">Kategori: {{ meal.strCategory }}</span>
+        <span class="meal-detail-tag secondary">Bölge: {{ meal.strArea }}</span>
+        <button (click)="copyLink()" class="meal-detail-tag link">🔗 Paylaş</button>
+        <button (click)="toggleShare()" class="meal-detail-tag link">🔄 Sosyal</button>
+      </div>
+      <!-- Paylaşım -->
+      <div *ngIf="showShare" class="meal-detail-share flex gap-3 mb-4">
+        <a [href]="'https://twitter.com/intent/tweet?text=' + meal.strMeal + ' ' + pageUrl" target="_blank" class="meal-detail-social twitter">Twitter</a>
+        <a [href]="'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl" target="_blank" class="meal-detail-social facebook">Facebook</a>
+        <a [href]="'https://wa.me/?text=' + meal.strMeal + ' ' + pageUrl" target="_blank" class="meal-detail-social whatsapp">WhatsApp</a>
+      </div>
+      <!-- Besin Değerleri ve Hakkında -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div class="meal-detail-section bg-[#FAFAFA] rounded-xl p-4 shadow-sm flex flex-col gap-2">
+          <h3 class="meal-detail-section-title accent text-lg font-semibold mb-2">Besin Değerleri (100g)</h3>
+          <ul class="meal-detail-nutrition text-sm text-gray-700">
+            <li>Kalori: 210 kcal</li>
+            <li>Protein: 8g</li>
+            <li>Karbonhidrat: 28g</li>
+            <li>Yağ: 7g</li>
+          </ul>
+        </div>
+        <div class="meal-detail-section bg-[#FAFAFA] rounded-xl p-4 shadow-sm flex flex-col gap-2">
+          <h3 class="meal-detail-section-title secondary text-lg font-semibold mb-2">Yemek Hakkında</h3>
+          <div class="meal-detail-history text-sm text-gray-700">Bu yemek, kökeniyle ünlü ve genellikle özel günlerde tercih edilen bir lezzettir. Püf noktası: Malzemeleri taze kullanmak ve kısık ateşte pişirmek!</div>
+        </div>
+      </div>
+      <!-- Puanlama -->
+      <div class="meal-detail-rating flex items-center gap-2 mb-4">
+        <span class="meal-detail-rating-label font-medium">Puan:</span>
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <button (click)="setRating(meal.idMeal, star)" [class.active]="userRating >= star" class="meal-detail-star text-xl">★</button>
+        </ng-container>
+        <span class="meal-detail-rating-value text-gray-500">({{ rating }}/5)</span>
+      </div>
+      <!-- Video -->
+      <div *ngIf="meal.strYoutube" class="meal-detail-video mb-4">
+        <iframe [src]="getYoutubeEmbedUrl(meal.strYoutube)" width="100%" height="260" frameborder="0" allowfullscreen class="meal-detail-iframe rounded-xl shadow"></iframe>
+      </div>
+      <!-- Malzemeler ve Tarif -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div class="meal-detail-section bg-[#FAFAFA] rounded-xl p-4 shadow-sm flex flex-col gap-2">
+          <h3 class="meal-detail-section-title accent text-lg font-semibold mb-2">Malzemeler</h3>
+          <ul class="meal-detail-ingredients text-sm text-gray-700 list-disc list-inside">
+            <li *ngFor="let ing of ingredients">{{ ing }}</li>
+          </ul>
+        </div>
+        <div class="meal-detail-section bg-[#FAFAFA] rounded-xl p-4 shadow-sm flex flex-col gap-2">
+          <h3 class="meal-detail-section-title secondary text-lg font-semibold mb-2">Tarif</h3>
+          <p class="meal-detail-instructions text-sm text-gray-700">{{ meal.strInstructions }}</p>
+        </div>
+      </div>
+      <!-- Benzer Yemekler -->
+      <div *ngIf="similarMeals.length > 0" class="meal-detail-similar mb-4">
+        <h3 class="meal-detail-section-title accent text-lg font-semibold mb-3">Benzer Yemekler</h3>
+        <div class="meal-detail-similar-list grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div *ngFor="let sim of similarMeals" class="meal-detail-similar-card bg-white rounded-lg shadow p-2 flex flex-col items-center">
+            <img [src]="sim.strMealThumb" [alt]="sim.strMeal" class="meal-detail-similar-img w-20 h-20 object-cover rounded mb-2" />
+            <div class="meal-detail-similar-title text-xs font-medium text-gray-700 text-center mb-1">{{ sim.strMeal }}</div>
+            <a [routerLink]="['/meals', sim.idMeal]" class="meal-detail-similar-link text-accent text-xs underline">Detay</a>
+          </div>
+        </div>
+      </div>
+      <!-- Yorumlar -->
+      <div class="meal-detail-comments bg-[#FAFAFA] rounded-xl p-4 shadow-sm flex flex-col gap-3">
+        <h3 class="meal-detail-section-title secondary text-lg font-semibold mb-2">Yorumlar</h3>
+        <form (ngSubmit)="addComment(meal.idMeal)" class="meal-detail-comment-form flex gap-2 mb-2">
+          <input [(ngModel)]="newComment" name="comment" placeholder="Yorum yaz..." class="meal-detail-comment-input flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent" />
+          <button type="submit" class="meal-detail-comment-btn accent px-4 py-2 rounded bg-accent text-white">Ekle</button>
+        </form>
+        <div *ngIf="comments.length === 0" class="meal-detail-no-comments text-gray-400 flex items-center gap-2">
+          <span class="meal-detail-no-comments-icon">💬</span>
+          Henüz yorum yok.
+        </div>
+        <!-- Example comments (dummy) -->
+        <div class="meal-detail-comment-box bg-white rounded p-2 shadow-sm mb-1">
+          <div class="meal-detail-comment-meta text-xs text-gray-500 mb-1">Zeynep - 2024-05-01 14:23</div>
+          <div class="meal-detail-comment-text text-sm text-gray-700">Harika bir tarif, ailem çok beğendi!</div>
+        </div>
+        <div class="meal-detail-comment-box bg-white rounded p-2 shadow-sm mb-1">
+          <div class="meal-detail-comment-meta text-xs text-gray-500 mb-1">Ahmet - 2024-04-28 09:12</div>
+          <div class="meal-detail-comment-text text-sm text-gray-700">Yapımı kolay ve çok lezzetliydi.</div>
+        </div>
+        <div *ngFor="let c of comments" class="meal-detail-comment-box bg-white rounded p-2 shadow-sm mb-1">
+          <div class="meal-detail-comment-meta text-xs text-gray-500 mb-1">{{ c.user }} - {{ c.date | date:'short' }}</div>
+          <div class="meal-detail-comment-text text-sm text-gray-700">{{ c.text }}</div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div> 
+      <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
+      <div class="flex flex-wrap gap-2 justify-center mb-2">
+        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm">Kategori: {{ meal.strCategory }}</span>
+        <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm">Bölge: {{ meal.strArea }}</span>
+        <button (click)="copyLink()" class="ml-2 text-sm bg-gray-100 px-2 py-1 rounded hover:bg-gray-200">🔗 Paylaş</button>
+        <button (click)="toggleShare()" class="ml-2 text-sm bg-gray-100 px-2 py-1 rounded hover:bg-gray-200">🔄 Sosyal</button>
+      </div>
+      <div *ngIf="showShare" class="mb-4 flex gap-2 justify-center">
+        <a [href]="'https://twitter.com/intent/tweet?text=' + meal.strMeal + ' ' + pageUrl" target="_blank" class="text-blue-500 underline">Twitter</a>
+        <a [href]="'https://www.facebook.com/sharer/sharer.php?u=' + pageUrl" target="_blank" class="text-blue-700 underline">Facebook</a>
+        <a [href]="'https://wa.me/?text=' + meal.strMeal + ' ' + pageUrl" target="_blank" class="text-green-600 underline">WhatsApp</a>
+      </div>
+      <div class="flex items-center gap-2 mb-4 justify-center">
+        <span class="font-semibold">Puan:</span>
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <button (click)="setRating(meal.idMeal, star)" [class.text-yellow-400]="userRating >= star" class="text-2xl focus:outline-none">★</button>
+        </ng-container>
+        <span class="ml-2 text-sm text-gray-500">({{ rating }}/5)</span>
+      </div>
+      <div *ngIf="meal.strYoutube" class="mb-4">
+        <iframe [src]="getYoutubeEmbedUrl(meal.strYoutube)" width="100%" height="220" frameborder="0" allowfullscreen class="rounded-lg"></iframe>
+      </div>
+      <div class="mb-4">
+        <h3 class="font-semibold mb-1">Malzemeler:</h3>
+        <ul class="list-disc list-inside text-gray-700">
+          <li *ngFor="let ing of ingredients">{{ ing }}</li>
+        </ul>
+      </div>
+      <div class="mb-4">
+        <h3 class="font-semibold mb-1">Tarif:</h3>
+        <p class="text-gray-700 whitespace-pre-line">{{ meal.strInstructions }}</p>
+      </div>
+      <div *ngIf="similarMeals.length > 0" class="mt-6">
+        <h3 class="font-semibold mb-2 text-blue-700">Benzer Yemekler</h3>
+        <div class="flex gap-4 overflow-x-auto pb-2">
+          <div *ngFor="let sim of similarMeals" class="min-w-[120px] bg-gray-50 rounded-lg shadow p-2 flex flex-col items-center">
+            <img [src]="sim.strMealThumb" [alt]="sim.strMeal" class="w-16 h-16 rounded-full mb-1 object-cover" />
+            <div class="text-xs text-center font-semibold">{{ sim.strMeal }}</div>
+            <a [routerLink]="['/meals', sim.idMeal]" class="text-blue-600 text-xs mt-1 hover:underline">Detay</a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8">
+        <h3 class="font-semibold mb-2 text-blue-700">Yorumlar</h3>
+        <form (ngSubmit)="addComment(meal.idMeal)" class="flex gap-2 mb-4">
+          <input [(ngModel)]="newComment" name="comment" placeholder="Yorum yaz..." class="flex-1 border rounded px-3 py-2" />
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Ekle</button>
+        </form>
+        <div *ngIf="comments.length === 0" class="text-gray-400 text-sm">Henüz yorum yok.</div>
+        <div *ngFor="let c of comments" class="mb-2 p-2 bg-gray-50 rounded shadow-sm">
+          <div class="text-xs text-gray-500">{{ c.user }} - {{ c.date | date:'short' }}</div>
+          <div class="text-sm">{{ c.text }}</div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div> 

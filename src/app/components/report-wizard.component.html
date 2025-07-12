@@ -1,0 +1,124 @@
+<div class="min-h-screen report-bg">
+  <div class="report-container">
+    <h1 class="report-title">📝 Rapor Oluşturucu</h1>
+    <!-- Report History -->
+    <div class="report-history animate-fade-in">
+      <h2 class="report-section-title">🗂️ Rapor Geçmişi</h2>
+      <div class="report-history-list">
+        <div *ngFor="let item of reportHistory" class="report-history-card" (click)="openHistoryModal(item)">
+          <div class="report-history-title">{{ item.title }}</div>
+          <div class="report-history-date">{{ item.date }}</div>
+        </div>
+      </div>
+    </div>
+    <!-- Report Wizard Steps (always visible) -->
+    <div class="report-card">
+      <!-- Step 1: Template Selection -->
+      <div *ngIf="step === 1" class="report-form">
+        <label class="report-label">Rapor Şablonu Seç:</label>
+        <div class="report-template-list">
+          <button *ngFor="let tpl of templates"
+                  class="report-template-btn"
+                  [class.selected]="selectedTemplate === tpl.key"
+                  (click)="selectTemplate(tpl.key)">
+            {{ tpl.name }}
+          </button>
+        </div>
+        <div *ngIf="selectedTemplate" class="report-template-example animate-fade-in">
+          <div class="report-preview-modern" [innerHTML]="getTemplateExample(selectedTemplate)"></div>
+        </div>
+        <div class="report-actions">
+          <button class="report-btn accent" [disabled]="!selectedTemplate" (click)="nextStep()">İleri</button>
+        </div>
+      </div>
+      <!-- Step 2: Title/Date/Meal -->
+      <form *ngIf="step === 2" (ngSubmit)="nextStep()" class="report-form">
+        <label class="report-label">Rapor Başlığı:</label>
+        <input [(ngModel)]="extraParams['title']" name="title" class="report-input" placeholder="Rapor başlığı girin..." required />
+        <label class="report-label">Tarih:</label>
+        <input [(ngModel)]="extraParams['date']" name="date" type="date" class="report-input" required />
+        <label class="report-label">Yemek Seç:</label>
+        <select [(ngModel)]="selectedMealId" name="meal" class="report-select" required>
+          <option value="">Yemek seçiniz...</option>
+          <option *ngFor="let meal of meals" [value]="meal.idMeal">{{ meal.strMeal }}</option>
+        </select>
+        <div class="report-actions">
+          <button type="button" (click)="prevStep()" class="report-btn secondary">Geri</button>
+          <button type="submit" class="report-btn accent" [disabled]="!extraParams['title'] || !extraParams['date'] || !selectedMealId">İleri</button>
+        </div>
+      </form>
+      <!-- Step 3: Analysis Type -->
+      <form *ngIf="step === 3" (ngSubmit)="nextStep()" class="report-form">
+        <label class="report-label">Analiz Türü:</label>
+        <select [(ngModel)]="analysisType" name="analysisType" class="report-select" required>
+          <option value="">Analiz türü seçiniz...</option>
+          <option *ngFor="let type of analysisTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+        <div *ngIf="analysisType === 'custom'" class="report-section">
+          <div class="report-custom-grid">
+            <div class="report-custom-field">
+              <label class="report-label">Açıklama:</label>
+              <input [(ngModel)]="extraParams['customNote']" name="customNote" class="report-input" placeholder="Açıklama girin..." />
+            </div>
+            <div class="report-custom-field">
+              <label class="report-label">Anahtar Kelimeler:</label>
+              <input [(ngModel)]="extraParams['keywords']" name="keywords" class="report-input" placeholder="Anahtar kelimeler..." />
+            </div>
+            <div class="report-custom-field">
+              <label class="report-label">Kaynakça:</label>
+              <input [(ngModel)]="extraParams['references']" name="references" class="report-input" placeholder="Kaynakça..." />
+            </div>
+          </div>
+        </div>
+        <div class="report-actions">
+          <button type="button" (click)="prevStep()" class="report-btn secondary">Geri</button>
+          <button type="submit" class="report-btn accent" [disabled]="!analysisType">İleri</button>
+        </div>
+      </form>
+      <!-- Step 4: Preview & Export -->
+      <div *ngIf="step === 4" class="report-preview">
+        <h2 class="report-section-title accent">📈 Analiz Sonucu</h2>
+        <div class="report-table-wrapper">
+          <table class="report-table">
+            <tr *ngFor="let key of (analysis | keyvalue)">
+              <td class="report-table-key">{{ key.key }}</td>
+              <td class="report-table-value">{{ key.value }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="report-actions">
+          <button type="button" (click)="prevStep()" class="report-btn secondary">Geri</button>
+          <button (click)="exportPDF()" class="report-btn accent">PDF İndir</button>
+          <button (click)="exportJSON()" class="report-btn secondary">JSON İndir</button>
+          <button (click)="exportDOC()" class="report-btn secondary">DOC İndir</button>
+        </div>
+      </div>
+      <div *ngIf="loading" class="report-loading">
+        <span class="report-loading-icon">⏳</span>
+        <span>Yükleniyor...</span>
+      </div>
+      <div *ngIf="error" class="report-error">
+        <span class="report-error-icon">⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+    </div>
+    <!-- History Modal (only for details) -->
+    <div class="report-modal-overlay" *ngIf="showHistoryModal">
+      <div class="report-modal-content-box">
+        <button class="report-modal-close" (click)="closeHistoryModal()">×</button>
+        <h2 class="modal-title">{{ selectedHistory?.title }}</h2>
+        <div class="modal-date">Tarih: {{ selectedHistory?.date }}</div>
+        <div class="modal-fields">
+          <div><b>Bölge:</b> {{ selectedHistory?.analysis['Bölge'] }}</div>
+          <div><b>Kategori:</b> {{ selectedHistory?.analysis['Kategori'] }}</div>
+          <div><b>Tarif:</b> {{ selectedHistory?.analysis['Tarif'] }}</div>
+          <div><b>Yemek Adı:</b> {{ selectedHistory?.analysis['Yemek Adı'] }}</div>
+        </div>
+        <div class="modal-actions">
+          <button class="report-btn accent" (click)="exportPDF(selectedHistory?.analysis)">PDF İndir</button>
+          <button class="report-btn secondary" (click)="exportDOC(selectedHistory?.analysis)">DOC İndir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

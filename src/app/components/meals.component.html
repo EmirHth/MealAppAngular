@@ -1,0 +1,87 @@
+<div class="min-h-screen meals-bg">
+  <div class="meals-container">
+    <h1 class="meals-title">🍛 Yemekler</h1>
+    <!-- Summary Bar -->
+    <div class="meals-summary-bar animate-fade-in">
+      <span *ngIf="selectedCategory" class="meals-summary-filter">Kategori: {{ selectedCategory }}</span>
+      <span *ngIf="selectedArea" class="meals-summary-filter">Bölge: {{ selectedArea }}</span>
+      <span *ngIf="selectedIngredient" class="meals-summary-filter">Malzeme: {{ selectedIngredient }}</span>
+      <span *ngIf="selectedLetter" class="meals-summary-filter">Harf: {{ selectedLetter }}</span>
+    </div>
+    <!-- Bugünün Önerisi -->
+    <div class="meals-suggestion animate-fade-in" *ngIf="popularMeals.length > 0">
+      <h2 class="meals-section-title">🎲 Bugünün Önerisi</h2>
+      <div class="meals-suggestion-card">
+        <img [src]="popularMeals[0].strMealThumb" [alt]="popularMeals[0].strMeal" class="meals-suggestion-img" />
+        <div class="meals-suggestion-content">
+          <div class="meals-suggestion-title">{{ popularMeals[0].strMeal }}</div>
+          <div class="meals-suggestion-meta">Kategori: {{ popularMeals[0].strCategory }} | Bölge: {{ popularMeals[0].strArea }}</div>
+          <a [routerLink]="['/meals', popularMeals[0].idMeal]" class="meals-link">Detay</a>
+        </div>
+      </div>
+    </div>
+    <div class="meals-filters">
+      <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="searchMeals()" placeholder="Yemek ara..." class="meals-input" />
+      <select [(ngModel)]="selectedCategory" (change)="filterByCategory()" class="meals-select">
+        <option value="">Kategori</option>
+        <option *ngFor="let cat of categories" [value]="cat.strCategory">{{ cat.strCategory }}</option>
+      </select>
+      <select [(ngModel)]="selectedArea" (change)="filterByArea()" class="meals-select">
+        <option value="">Bölge</option>
+        <option *ngFor="let area of areas" [value]="area.strArea">{{ area.strArea }}</option>
+      </select>
+      <select [(ngModel)]="selectedIngredient" (change)="filterByIngredient()" class="meals-select">
+        <option value="">Malzeme</option>
+        <option *ngFor="let ing of ingredients" [value]="ing.strIngredient">{{ ing.strIngredient }}</option>
+      </select>
+      <button (click)="searchMeals()" class="meals-btn accent">Ara</button>
+      <button (click)="resetFilters()" class="meals-btn secondary">Sıfırla</button>
+    </div>
+    <div class="meals-alphabet">
+      <button *ngFor="let letter of alphabet" (click)="filterByLetter(letter)" [class.active]="selectedLetter === letter" class="meals-letter">{{ letter }}</button>
+    </div>
+    <div class="meals-section">
+      <h2 class="meals-section-title">🔥 Popüler Yemekler</h2>
+      <div class="meals-popular-grid">
+        <div *ngFor="let meal of popularMeals" class="meals-card">
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meals-card-img" />
+          <div class="meals-card-title">{{ meal.strMeal }}</div>
+          <a [routerLink]="['/meals', meal.idMeal]" class="meals-link">Detay</a>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="loading" class="meals-grid">
+      <div *ngFor="let skel of skeletons" class="meals-card skeleton">
+        <div class="meals-card-img skeleton-img"></div>
+        <div class="meals-card-title skeleton-title"></div>
+        <div class="meals-card-meta skeleton-meta"></div>
+      </div>
+    </div>
+    <div *ngIf="error" class="meals-error">
+      <span class="meals-error-icon">⚠️</span>
+      <span>{{ error }}</span>
+    </div>
+    <div *ngIf="!loading && !error && pagedMeals.length === 0" class="meals-empty">
+      <span class="meals-empty-icon">😕</span>
+      <span>Sonuç bulunamadı.</span>
+    </div>
+    <div class="meals-grid" *ngIf="!loading && !error">
+      <div class="meals-card" *ngFor="let meal of pagedMeals">
+        <button (click)="toggleFavorite(meal.idMeal)" class="meals-fav-btn" [attr.aria-label]="isFavorite(meal.idMeal) ? 'Favoriden çıkar' : 'Favorilere ekle'">
+          <span *ngIf="isFavorite(meal.idMeal)" class="meals-fav-icon active">❤️</span>
+          <span *ngIf="!isFavorite(meal.idMeal)" class="meals-fav-icon">🩷</span>
+        </button>
+        <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meals-card-img" />
+        <div class="meals-card-title">{{ meal.strMeal }}</div>
+        <div class="meals-card-meta">{{ meal.strCategory }}</div>
+        <div class="meals-card-desc">Kısa açıklama: {{ meal.strInstructions?.slice(0, 60) || 'Açıklama yok.' }}...</div>
+        <div class="meals-card-rating">Puan: <span class="meals-card-stars">★★★★☆</span></div>
+        <a [routerLink]="['/meals', meal.idMeal]" class="meals-link">Detay</a>
+      </div>
+    </div>
+    <div *ngIf="!loading && !error && pagedMeals.length < meals.length" class="meals-loadmore">
+      <button (click)="loadMore()" class="meals-btn accent">Daha fazla yükle</button>
+    </div>
+  </div>
+</div> 
+ 

@@ -1,0 +1,240 @@
+/* Modern Meal Detail Styles */
+.meal-detail-bg {
+  background: #fff;
+  min-height: 100vh;
+}
+.meal-detail-container {
+  background: #FAFAFA;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1.5px solid #E5E7EB;
+  transition: all 0.3s ease;
+}
+.meal-detail-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.meal-detail-title {
+  font-family: 'Poppins', 'Inter', 'Roboto', 'Open Sans', sans-serif;
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.meal-detail-img {
+  border-radius: 16px;
+  object-fit: cover;
+  width: 100%;
+  max-height: 340px;
+  transition: transform 0.3s ease;
+}
+.meal-detail-container:hover .meal-detail-img {
+  transform: scale(1.05);
+}
+.meal-detail-tags {
+  gap: 8px;
+}
+.meal-detail-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-weight: 500;
+  background: #F9FAFB;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.meal-detail-tag.accent {
+  background: #FF8552;
+  color: #fff;
+  border: none;
+}
+.meal-detail-tag.secondary {
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+}
+.meal-detail-tag.link {
+  background: #fff;
+  color: #4F46E5;
+  border: 1px solid #4F46E5;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.meal-detail-tag.link:hover {
+  background: #4F46E5;
+  color: #fff;
+  text-decoration: underline;
+}
+.meal-detail-fav-btn {
+  background: #fff;
+  border: 1.5px solid #FF8552;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(255,133,82,0.08);
+}
+.meal-detail-fav-btn:hover {
+  background: #FF8552;
+  color: #fff;
+  border-color: #e65c30;
+}
+.meal-detail-fav-icon.active {
+  color: #FF8552;
+}
+.meal-detail-section-title {
+  font-family: 'Poppins', 'Inter', 'Roboto', 'Open Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.meal-detail-section-title.accent {
+  color: #FF8552;
+}
+.meal-detail-section-title.secondary {
+  color: #4F46E5;
+}
+.meal-detail-nutrition, .meal-detail-ingredients {
+  color: #6B7280;
+  font-family: 'Open Sans', 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+.meal-detail-instructions, .meal-detail-history {
+  color: #6B7280;
+  font-family: 'Open Sans', 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+.meal-detail-similar-card {
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1.5px solid #E5E7EB;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+.meal-detail-similar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.meal-detail-similar-img {
+  border-radius: 12px;
+  object-fit: cover;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 6px;
+  transition: transform 0.3s ease;
+}
+.meal-detail-similar-card:hover .meal-detail-similar-img {
+  transform: scale(1.05);
+}
+.meal-detail-similar-link {
+  color: #4F46E5;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.meal-detail-similar-link:hover {
+  color: #FF8552;
+  text-decoration: underline;
+}
+.meal-detail-rating-label {
+  color: #111827;
+  font-family: 'Poppins', 'Inter', sans-serif;
+}
+.meal-detail-star {
+  background: none;
+  border: none;
+  color: #FF8552;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.meal-detail-star.active, .meal-detail-star:hover {
+  color: #e65c30;
+}
+.meal-detail-rating-value {
+  color: #6B7280;
+  font-size: 1rem;
+}
+.meal-detail-comment-form input {
+  font-family: 'Open Sans', 'Roboto', sans-serif;
+}
+.meal-detail-comment-btn {
+  background: #FF8552;
+  color: #fff;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.meal-detail-comment-btn:hover {
+  background: #e65c30;
+}
+.meal-detail-comment-box {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1.5px solid #E5E7EB;
+  background: #fff;
+  margin-bottom: 4px;
+}
+.meal-detail-comment-meta {
+  color: #6B7280;
+  font-family: 'Open Sans', 'Roboto', sans-serif;
+}
+.meal-detail-comment-text {
+  color: #111827;
+  font-family: 'Open Sans', 'Roboto', sans-serif;
+}
+.meal-detail-back {
+  background: none;
+  border: none;
+  color: #4F46E5;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+.meal-detail-back:hover {
+  color: #FF8552;
+  text-decoration: underline;
+}
+.meal-detail-error {
+  color: #FF8552;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.meal-detail-loading .skeleton {
+  background: #E5E7EB;
+  border-radius: 8px;
+  min-height: 18px;
+  margin-bottom: 8px;
+  animation: skeleton-loading 1.2s infinite linear alternate;
+}
+@keyframes skeleton-loading {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+.meal-detail-iframe {
+  border-radius: 16px;
+  border: 1.5px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+@media (max-width: 700px) {
+  .meal-detail-container {
+    padding: 10px 2px;
+    border-radius: 10px;
+  }
+  .meal-detail-title {
+    font-size: 1.2rem;
+  }
+} 
+ 

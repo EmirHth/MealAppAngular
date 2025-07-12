@@ -1,1 +1,22 @@
-<router-outlet />
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-left">
+      <button [routerLink]="['/']" routerLinkActive="active" class="navbar-logo">🍽️ <span>MealApp</span></button>
+    </div>
+    <div class="navbar-center">
+      <button [routerLink]="['/meals']" routerLinkActive="active" class="navbar-link">Yemekler</button>
+      <button [routerLink]="['/analytics']" routerLinkActive="active" class="navbar-link">Analitik</button>
+      <button [routerLink]="['/report-wizard']" routerLinkActive="active" class="navbar-link">Rapor Oluştur</button>
+      <button [routerLink]="['/favorites']" routerLinkActive="active" class="navbar-link">Favoriler</button>
+    </div>
+    <div class="navbar-right">
+      <button [routerLink]="['/hakkimizda']" routerLinkActive="active" class="navbar-link">Hakkımızda</button>
+      <button class="navbar-hamburger" aria-label="Menüyü Aç"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="main-bg">
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

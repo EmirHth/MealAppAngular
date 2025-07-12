@@ -1,0 +1,99 @@
+<div class="min-h-screen analytics-bg">
+  <div class="analytics-container">
+    <h1 class="analytics-title">📊 Veri Analitiği</h1>
+    <!-- Summary Cards -->
+    <div class="analytics-summary-cards animate-fade-in">
+      <div class="analytics-summary-card">
+        <div class="analytics-summary-label">Toplam Yemek</div>
+        <div class="analytics-summary-value">256</div>
+      </div>
+      <div class="analytics-summary-card">
+        <div class="analytics-summary-label">En Popüler Kategori</div>
+        <div class="analytics-summary-value">Et</div>
+      </div>
+      <div class="analytics-summary-card">
+        <div class="analytics-summary-label">En Popüler Bölge</div>
+        <div class="analytics-summary-value">Türk</div>
+      </div>
+    </div>
+    <div class="analytics-card">
+      <!-- Filter Bar -->
+      <div class="analytics-filters">
+        <label class="analytics-label">Grafik Türü:</label>
+        <select [ngModel]="selectedChartType" (ngModelChange)="setSelectedChartType($event)" class="analytics-select">
+          <option value="category">Kategoriye Göre Yemek Dağılımı</option>
+          <option value="area">Bölgeye Göre Yemek Sayısı</option>
+          <option value="popular">En Çok Analiz Edilen Yemekler</option>
+        </select>
+        <button class="analytics-btn accent ml-4" (click)="showCharts = true">Göster</button>
+      </div>
+      
+      <ng-container *ngIf="showCharts && selectedChartType">
+        <!-- Pie Chart -->
+        <div class="analytics-section">
+          <h2 class="analytics-section-title accent">{{ getChartTitle() }} - Pasta Grafik</h2>
+          <div class="analytics-chart-box">
+            <canvas baseChart
+              [data]="getCurrentChartData()"
+              type="pie"
+              [options]="chartOptions">
+            </canvas>
+          </div>
+        </div>
+        
+        <!-- Bar Chart -->
+        <div class="analytics-section">
+          <h2 class="analytics-section-title secondary">{{ getChartTitle() }} - Çubuk Grafik</h2>
+          <div class="analytics-chart-box">
+            <canvas baseChart
+              [data]="getCurrentChartData()"
+              type="bar"
+              [options]="chartOptions">
+            </canvas>
+          </div>
+        </div>
+        
+        <!-- Line Chart -->
+        <div class="analytics-section">
+          <h2 class="analytics-section-title accent">{{ getChartTitle() }} - Çizgi Grafik</h2>
+          <div class="analytics-chart-box">
+            <canvas baseChart
+              [data]="getCurrentChartData()"
+              type="line"
+              [options]="chartOptions">
+            </canvas>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div> 
+<div class="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
+  <h1 class="text-2xl font-bold mb-6 text-blue-700">Veri Analitiği & Grafikler</h1>
+  <div class="w-full max-w-3xl bg-white rounded-lg shadow p-6">
+    <div class="flex gap-4 mb-6 items-center">
+      <label class="font-semibold">Grafik Türü:</label>
+      <select [(ngModel)]="selectedChartType" class="border rounded px-3 py-2">
+        <option value="bar">Bar</option>
+        <option value="pie">Pie</option>
+        <option value="line">Line</option>
+      </select>
+    </div>
+    <div class="mb-8">
+      <h2 class="font-semibold mb-2">Kategoriye Göre Yemek Dağılımı</h2>
+      <canvas baseChart
+        [data]="categoryChart"
+        [type]="selectedChartType"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+    <div>
+      <h2 class="font-semibold mb-2">Bölgeye Göre Yemek Sayısı</h2>
+      <canvas baseChart
+        [data]="areaChart"
+        [type]="selectedChartType"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  </div>
+</div> 

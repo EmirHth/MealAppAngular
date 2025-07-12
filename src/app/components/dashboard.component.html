@@ -1,0 +1,221 @@
+<div class="min-h-screen flex flex-col items-center py-10 px-2" style="background:#FFF8F0;">
+  <div class="dashboard-welcome animate-fade-in">
+    <div class="dashboard-user-info">
+      <img src="https://ui-avatars.com/api/?name=Kullanıcı&background=FF7E1B&color=fff&rounded=true&size=64" class="dashboard-user-avatar" alt="Kullanıcı Avatarı" />
+      <div>
+        <div class="dashboard-user-name">Merhaba, Kullanıcı!</div>
+        <div class="dashboard-user-desc">Bugün yemek dünyasında neler keşfetmek istersin?</div>
+      </div>
+    </div>
+  </div>
+  <h1 class="dashboard-title">Dashboard</h1>
+  <div class="dashboard-grid">
+    <div class="dashboard-card">
+      <div class="dashboard-content">
+        <span class="dashboard-icon">🍲</span>
+        <div class="dashboard-value">{{ totalMeals }}</div>
+        <div class="dashboard-label">Toplam Yemek</div>
+        <div class="dashboard-desc">Veritabanındaki toplam yemek sayısı.</div>
+        <button class="dashboard-btn" (click)="navigateToMeals()">Detay</button>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="dashboard-content">
+        <span class="dashboard-icon">📂</span>
+        <div class="dashboard-value">{{ totalCategories }}</div>
+        <div class="dashboard-label">Kategori</div>
+        <div class="dashboard-desc">Farklı yemek kategorileri.</div>
+        <button class="dashboard-btn" (click)="navigateToMeals()">Detay</button>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="dashboard-content">
+        <span class="dashboard-icon">🌍</span>
+        <div class="dashboard-value">{{ totalAreas }}</div>
+        <div class="dashboard-label">Bölge</div>
+        <div class="dashboard-desc">Dünya mutfaklarından bölgeler.</div>
+        <button class="dashboard-btn" (click)="navigateToMeals()">Detay</button>
+      </div>
+    </div>
+    <div class="dashboard-card">
+      <div class="dashboard-content">
+        <span class="dashboard-icon">❤️</span>
+        <div class="dashboard-value">{{ totalFavorites }}</div>
+        <div class="dashboard-label">Favori Yemekler</div>
+        <div class="dashboard-desc">Sık kullanılan favori yemekler.</div>
+        <button class="dashboard-btn" (click)="navigateToFavorites()">Detay</button>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-section animate-fade-in">
+    <h2 class="dashboard-section-title">Son Eklenen Yemekler</h2>
+    <div class="dashboard-grid">
+      <ng-container *ngIf="lastMeals.length > 0; else noLastMeals">
+        <div *ngFor="let meal of lastMeals" class="dashboard-card">
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="dashboard-img" />
+          <div class="dashboard-content">
+            <div class="dashboard-label">{{ meal.strMeal }}</div>
+            <div class="dashboard-desc">{{ meal.strCategory }}</div>
+            <div class="dashboard-meta">
+              <span class="dashboard-meta-icon">🌍</span>
+              <span class="dashboard-desc">{{ meal.strArea }}</span>
+            </div>
+            <button class="dashboard-btn" (click)="navigateToMealDetail(meal.idMeal)">Detay</button>
+            <button class="dashboard-link" 
+                    [class.favorite-active]="isFavorite(meal.idMeal)"
+                    (click)="isFavorite(meal.idMeal) ? removeFromFavorites(meal) : addToFavorites(meal)">
+              {{ isFavorite(meal.idMeal) ? 'Favorilerden Çıkar' : 'Favorilere Ekle' }}
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noLastMeals>
+        <div class="dashboard-empty">
+          <span class="dashboard-icon">😕</span>
+          <span>Son eklenen yemek yok.</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="dashboard-section animate-fade-in">
+    <h2 class="dashboard-section-title">Popüler Kategoriler</h2>
+    <div class="dashboard-popular-categories">
+      <span class="dashboard-category-chip" 
+            *ngFor="let category of ['Et', 'Tavuk', 'Tatlı', 'Vejetaryen', 'Deniz Ürünleri', 'Çorba']"
+            [class.selected]="selectedCategory === category"
+            (click)="selectCategory(category)">
+        {{ category }}
+      </span>
+    </div>
+    
+    <!-- Category meals display -->
+    <div *ngIf="showCategoryMeals && categoryMeals.length > 0" class="dashboard-category-meals">
+      <div class="dashboard-category-header">
+        <h3>{{ selectedCategory }} Kategorisindeki Yemekler</h3>
+        <button class="dashboard-clear-btn" (click)="clearCategoryFilter()">Temizle</button>
+      </div>
+      <div class="dashboard-grid">
+        <div *ngFor="let meal of categoryMeals" class="dashboard-card">
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="dashboard-img" />
+          <div class="dashboard-content">
+            <div class="dashboard-label">{{ meal.strMeal }}</div>
+            <div class="dashboard-desc">{{ meal.strCategory }}</div>
+            <div class="dashboard-meta">
+              <span class="dashboard-meta-icon">🌍</span>
+              <span class="dashboard-desc">{{ meal.strArea }}</span>
+            </div>
+            <button class="dashboard-btn" (click)="navigateToMealDetail(meal.idMeal)">Detay</button>
+            <button class="dashboard-link" 
+                    [class.favorite-active]="isFavorite(meal.idMeal)"
+                    (click)="isFavorite(meal.idMeal) ? removeFromFavorites(meal) : addToFavorites(meal)">
+              {{ isFavorite(meal.idMeal) ? 'Favorilerden Çıkar' : 'Favorilere Ekle' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-section animate-fade-in">
+    <h2 class="dashboard-section-title">Son Analizler</h2>
+    <div class="dashboard-analyses">
+      <div class="dashboard-analysis-card" 
+           (click)="showAnalysisDetail({
+             title: 'Karnıyarık Analizi',
+             category: 'Et',
+             date: '2024-05-01',
+             description: 'Malzeme sayısı: 8, Bölge: Türk, Puan: 4/5',
+             details: 'Bu analizde karnıyarık yemeğinin detaylı besin değerleri, malzemeleri ve hazırlanış süreci incelenmiştir. Türk mutfağının geleneksel lezzetlerinden biri olan bu yemek, patlıcan ve kıyma ile hazırlanmaktadır.'
+           })">
+        <div class="dashboard-analysis-title">Karnıyarık Analizi</div>
+        <div class="dashboard-analysis-meta">Kategori: Et | Tarih: 2024-05-01</div>
+        <div class="dashboard-analysis-desc">Malzeme sayısı: 8, Bölge: Türk, Puan: 4/5</div>
+      </div>
+      <div class="dashboard-analysis-card" 
+           (click)="showAnalysisDetail({
+             title: 'Tiramisu Analizi',
+             category: 'Tatlı',
+             date: '2024-04-28',
+             description: 'Malzeme sayısı: 6, Bölge: İtalyan, Puan: 5/5',
+             details: 'İtalyan mutfağının en popüler tatlılarından biri olan tiramisu, kahve ve mascarpone peyniri ile hazırlanmaktadır. Bu analizde tatlıyı oluşturan tüm malzemeler ve besin değerleri detaylı olarak incelenmiştir.'
+           })">
+        <div class="dashboard-analysis-title">Tiramisu Analizi</div>
+        <div class="dashboard-analysis-meta">Kategori: Tatlı | Tarih: 2024-04-28</div>
+        <div class="dashboard-analysis-desc">Malzeme sayısı: 6, Bölge: İtalyan, Puan: 5/5</div>
+      </div>
+      <div class="dashboard-analysis-card" 
+           (click)="showAnalysisDetail({
+             title: 'Sushi Analizi',
+             category: 'Deniz Ürünleri',
+             date: '2024-04-25',
+             description: 'Malzeme sayısı: 7, Bölge: Japon, Puan: 4/5',
+             details: 'Japon mutfağının en önemli yemeklerinden biri olan sushi, çiğ balık ve pirinç ile hazırlanmaktadır. Bu analizde sushi çeşitleri, besin değerleri ve hazırlanış teknikleri detaylı olarak ele alınmıştır.'
+           })">
+        <div class="dashboard-analysis-title">Sushi Analizi</div>
+        <div class="dashboard-analysis-meta">Kategori: Deniz Ürünleri | Tarih: 2024-04-25</div>
+        <div class="dashboard-analysis-desc">Malzeme sayısı: 7, Bölge: Japon, Puan: 4/5</div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-section animate-fade-in">
+    <h2 class="dashboard-section-title">Favori Yemekler</h2>
+    <div class="dashboard-grid">
+      <ng-container *ngIf="favoriteMeals.length > 0; else noFavMeals">
+        <div *ngFor="let fav of favoriteMeals" class="dashboard-card">
+          <img [src]="fav.strMealThumb" [alt]="fav.strMeal" class="dashboard-img" />
+          <div class="dashboard-content">
+            <div class="dashboard-label">{{ fav.strMeal }}</div>
+            <div class="dashboard-desc">{{ fav.strCategory }}</div>
+            <div class="dashboard-meta">
+              <span class="dashboard-meta-icon">🌍</span>
+              <span class="dashboard-desc">{{ fav.strArea }}</span>
+            </div>
+            <button class="dashboard-btn" (click)="navigateToMealDetail(fav.idMeal)">Detay</button>
+            <button class="dashboard-link favorite-active" (click)="removeFromFavorites(fav)">Favorilerden Çıkar</button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noFavMeals>
+        <div class="dashboard-empty">
+          <span class="dashboard-icon">💔</span>
+          <span>Favori yemek yok.</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  
+  <!-- Analysis Details Modal -->
+  <div *ngIf="showAnalysisDetails && selectedAnalysis" class="dashboard-modal-overlay" (click)="closeAnalysisDetails()">
+    <div class="dashboard-modal" (click)="$event.stopPropagation()">
+      <div class="dashboard-modal-header">
+        <h3>{{ selectedAnalysis.title }}</h3>
+        <button class="dashboard-modal-close" (click)="closeAnalysisDetails()">×</button>
+      </div>
+      <div class="dashboard-modal-content">
+        <div class="dashboard-modal-meta">
+          <span><strong>Kategori:</strong> {{ selectedAnalysis.category }}</span>
+          <span><strong>Tarih:</strong> {{ selectedAnalysis.date }}</span>
+        </div>
+        <div class="dashboard-modal-desc">
+          <strong>Özet:</strong> {{ selectedAnalysis.description }}
+        </div>
+        <div class="dashboard-modal-details">
+          <strong>Detaylar:</strong>
+          <p>{{ selectedAnalysis.details }}</p>
+        </div>
+        <div class="dashboard-modal-actions">
+          <button class="dashboard-btn" (click)="navigateToAnalytics()">Analiz Sayfasına Git</button>
+          <button class="dashboard-link" (click)="closeAnalysisDetails()">Kapat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <hr class="dashboard-separator" />
+  <div class="dashboard-footer">
+    © 2024 Foodie Vibes Dashboard. Tüm hakları saklıdır.
+  </div>
+  <div class="mt-8 text-[#FF6F61] animate-fade-in text-sm flex flex-col items-center" *ngIf="error && !loading">
+    <span class="dashboard-icon">⚠️</span>
+    <span>{{ error }}</span>
+  </div>
+</div> 

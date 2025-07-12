@@ -1,0 +1,286 @@
+/* Favorites minimalist modern styles */
+.favorites-bg {
+  background: #fff;
+  min-height: 100vh;
+}
+.favorites-title {
+  font-family: 'Poppins', 'Montserrat', 'Inter', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FF7E1B;
+  margin-bottom: 2.5rem;
+  letter-spacing: -1px;
+  text-align: center;
+}
+.favorites-container {
+  width: 100%;
+  max-width: 1200px;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.favorites-loading, .favorites-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #5BC0EB;
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 1.2rem;
+  margin: 3rem 0;
+}
+.favorites-loading-icon, .favorites-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.favorites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 1.5rem;
+}
+.favorites-card {
+  background: #FAFAFA;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 0;
+  min-width: 0;
+  min-height: 420px;
+  max-width: 350px;
+  width: 100%;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.favorites-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(255,126,27,0.10);
+  transform: translateY(-5px) scale(1.03);
+}
+.favorites-card-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 8px 0 rgba(91,192,235,0.08);
+}
+.favorites-card-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.favorites-card-title {
+  font-family: 'Poppins', 'Montserrat', 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.favorites-card-meta {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.favorites-card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+.favorites-btn {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px 0 rgba(255,126,27,0.06);
+}
+.favorites-btn-detail {
+  background: #FF7E1B;
+  color: #fff;
+}
+.favorites-btn-detail:hover {
+  background: #fff;
+  color: #FF7E1B;
+  border: 1.5px solid #FF7E1B;
+}
+.favorites-btn-remove {
+  background: #5BC0EB;
+  color: #fff;
+}
+.favorites-btn-remove:hover {
+  background: #fff;
+  color: #5BC0EB;
+  border: 1.5px solid #5BC0EB;
+}
+
+/* Not alanı stilleri */
+.favorites-note-area {
+  margin-top: 1rem;
+  background: #F8F9FA;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #E9ECEF;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.favorites-note-area:hover {
+  border-color: #FF7E1B;
+  box-shadow: 0 2px 8px rgba(255, 126, 27, 0.1);
+}
+
+/* Not ekle butonu */
+.favorites-note-add-btn {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #FF7E1B;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+
+.favorites-note-add-btn:hover {
+  background: rgba(255, 126, 27, 0.1);
+  text-decoration-color: #FF7E1B;
+}
+
+/* Not içeriği */
+.favorites-note-content {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #495057;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+/* Not butonları */
+.favorites-note-btn {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+
+.favorites-note-edit-btn {
+  color: #FF7E1B;
+  background: none;
+}
+
+.favorites-note-edit-btn:hover {
+  background: rgba(255, 126, 27, 0.1);
+  text-decoration-color: #FF7E1B;
+}
+
+.favorites-note-delete-btn {
+  color: #DC3545;
+  background: none;
+}
+
+.favorites-note-delete-btn:hover {
+  background: rgba(220, 53, 69, 0.1);
+  text-decoration-color: #DC3545;
+}
+
+/* Not input alanı */
+.favorites-note-input {
+  font-family: 'Open Sans', 'Inter', sans-serif;
+  font-size: 0.875rem;
+  border: 1px solid #CED4DA;
+  border-radius: 6px;
+  padding: 8px 12px;
+  width: 100%;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.favorites-note-input:focus {
+  outline: none;
+  border-color: #FF7E1B;
+  box-shadow: 0 0 0 3px rgba(255, 126, 27, 0.1);
+}
+
+/* Not kaydet/iptal butonları */
+.favorites-note-save-btn {
+  background: #FF7E1B;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.favorites-note-save-btn:hover {
+  background: #E66A00;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(255, 126, 27, 0.2);
+}
+
+.favorites-note-cancel-btn {
+  background: #6C757D;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.favorites-note-cancel-btn:hover {
+  background: #5A6268;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
+}
+
+@media (max-width: 600px) {
+  .favorites-title {
+    font-size: 1.5rem;
+  }
+  .favorites-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .favorites-card {
+    padding: 14px;
+    min-height: 340px;
+  }
+  .favorites-card-img {
+    width: 90px;
+    height: 90px;
+  }
+  .favorites-note-area {
+    padding: 10px;
+  }
+  .favorites-note-input {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+} 
+ 

@@ -1,0 +1,79 @@
+<div class="favorites-bg min-h-screen flex flex-col items-center py-10 px-4">
+  <h1 class="favorites-title">★ Favori Yemeklerim</h1>
+
+  <!-- İstatistik Kartları ve Özet Bölümü -->
+  <div class="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="bg-[#FAFAFA] rounded-xl shadow-md p-6 flex flex-col items-center">
+      <div class="text-2xl font-bold text-accent">{{ favoriteMeals.length }}</div>
+      <div class="text-gray-500 mt-1">Toplam Favori</div>
+    </div>
+    <div class="bg-[#FAFAFA] rounded-xl shadow-md p-6 flex flex-col items-center">
+      <div class="text-2xl font-bold text-accent">{{ getMostPopularCategory() }}</div>
+      <div class="text-gray-500 mt-1">En Popüler Kategori</div>
+    </div>
+    <div class="bg-[#FAFAFA] rounded-xl shadow-md p-6 flex flex-col items-center">
+      <div class="text-2xl font-bold text-accent">{{ getLastAddedMealName() }}</div>
+      <div class="text-gray-500 mt-1">Son Eklenen</div>
+    </div>
+  </div>
+  <!-- /İstatistik Kartları ve Özet Bölümü -->
+
+  <!-- Toplu Seçim ve Silme Barı -->
+  <div *ngIf="selectedMealIds.length > 0" class="w-full max-w-5xl flex items-center justify-between bg-white rounded-lg shadow p-4 mb-4 border border-gray-100">
+    <div class="text-gray-700 font-medium">{{ selectedMealIds.length }} yemek seçildi</div>
+    <button (click)="removeSelectedFavorites()" class="favorites-btn favorites-btn-remove px-4 py-2 rounded-md">Seçilenleri Sil</button>
+  </div>
+  <!-- /Toplu Seçim ve Silme Barı -->
+
+  <div class="favorites-container">
+    <div *ngIf="loading" class="favorites-loading">
+      <span class="favorites-loading-icon">⏳</span>
+      <span>Yükleniyor...</span>
+    </div>
+    <div *ngIf="!loading && favoriteMeals.length === 0" class="favorites-empty">
+      <span class="favorites-empty-icon">😕</span>
+      <span>Favori yemek yok.</span>
+    </div>
+    <div *ngIf="!loading && favoriteMeals.length > 0" class="favorites-list">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div *ngFor="let meal of favoriteMeals" class="favorites-card relative">
+          <!-- Checkbox -->
+          <input type="checkbox" class="absolute left-2 top-2 w-5 h-5 accent-accent" [checked]="selectedMealIds.includes(meal.idMeal)" (change)="toggleSelectMeal(meal.idMeal)" />
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="favorites-card-img" />
+          <div class="favorites-card-content">
+            <div class="favorites-card-title">{{ meal.strMeal }}</div>
+            <div class="favorites-card-meta">{{ meal.strCategory }} | {{ meal.strArea }}</div>
+          </div>
+          <div class="favorites-card-actions">
+            <button (click)="goToDetail(meal.idMeal)" class="favorites-btn favorites-btn-detail">Detay</button>
+            <button (click)="removeFavorite(meal.idMeal)" class="favorites-btn favorites-btn-remove">Favoriden Çıkar</button>
+          </div>
+          <!-- Not Alanı -->
+          <div class="favorites-note-area">
+            <!-- Not yoksa ve düzenleme modunda değilse: Not Ekle butonu -->
+            <div *ngIf="!getNote(meal.idMeal) && editingNoteId !== meal.idMeal" class="flex items-center">
+              <button (click)="editNote(meal.idMeal)" class="favorites-note-add-btn">Not Ekle</button>
+            </div>
+            
+            <!-- Not varsa ve düzenleme modunda değilse: Notu ve düzenle/sil butonları -->
+            <div *ngIf="getNote(meal.idMeal) && editingNoteId !== meal.idMeal" class="flex items-center justify-between">
+              <div class="favorites-note-content">Not: {{ getNote(meal.idMeal) }}</div>
+              <div>
+                <button (click)="editNote(meal.idMeal)" class="favorites-note-btn favorites-note-edit-btn">Düzenle</button>
+                <button (click)="deleteNote(meal.idMeal)" class="favorites-note-btn favorites-note-delete-btn">Sil</button>
+              </div>
+            </div>
+            
+            <!-- Düzenleme modunda: Input ve kaydet/iptal butonları -->
+            <div *ngIf="editingNoteId === meal.idMeal" class="flex items-center gap-2">
+              <input [(ngModel)]="noteInputs[meal.idMeal]" placeholder="Not ekle..." class="favorites-note-input flex-1" />
+              <button (click)="saveNote(meal.idMeal)" class="favorites-note-save-btn">Kaydet</button>
+              <button (click)="cancelEditNote(meal.idMeal)" class="favorites-note-cancel-btn">İptal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+ 

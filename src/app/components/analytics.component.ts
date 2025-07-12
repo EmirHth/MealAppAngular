@@ -14,7 +14,7 @@ import { ChartType, ChartOptions } from 'chart.js';
 })
 export class AnalyticsComponent {
   private mealDb = inject(MealDbService);
-  selectedChartType: string = '';
+  selectedChartType: ChartType = 'bar';
   showCharts = false;
   chartOptions: ChartOptions = { 
     responsive: true, 
@@ -141,12 +141,10 @@ export class AnalyticsComponent {
 
   getCurrentChartData() {
     switch(this.selectedChartType) {
-      case 'category':
+      case 'bar':
+      case 'pie':
+      case 'line':
         return this.categoryChart;
-      case 'area':
-        return this.areaChart;
-      case 'popular':
-        return this.popularMealsChart;
       default:
         return this.categoryChart;
     }
@@ -154,19 +152,19 @@ export class AnalyticsComponent {
 
   getChartTitle() {
     switch(this.selectedChartType) {
-      case 'category':
-        return '📈 Kategoriye Göre Yemek Dağılımı';
-      case 'area':
-        return '🌍 Bölgeye Göre Yemek Sayısı';
-      case 'popular':
-        return '🏆 En Çok Analiz Edilen Yemekler';
+      case 'bar':
+        return '📊 Bar Grafik';
+      case 'pie':
+        return '🥧 Pasta Grafik';
+      case 'line':
+        return '📈 Çizgi Grafik';
       default:
-        return '📈 Kategoriye Göre Yemek Dağılımı';
+        return '📊 Bar Grafik';
     }
   }
 
   // Add a setter to reset showCharts when chart type changes
-  setSelectedChartType(type: string) {
+  setSelectedChartType(type: ChartType) {
     this.selectedChartType = type;
     this.showCharts = false;
   }
